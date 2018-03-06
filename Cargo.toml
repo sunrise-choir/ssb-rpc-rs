@@ -1,0 +1,10 @@
+[package]
+name = "ssb-rpc"
+version = "0.1.0"
+authors = ["AljoschaMeyer <mail@aljoscha-meyer.de>"]
+description = "The remote procedure calls used by ssb."
+repository = "https://github.com/ssbc/ssb-rpc-rs"
+readme = "README.md"
+license = "GPL-3.0"
+
+[dependencies]
