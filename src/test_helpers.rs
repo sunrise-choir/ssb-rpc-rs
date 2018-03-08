@@ -30,12 +30,12 @@ pub fn run_test<Fun: 'static + FnOnce(RpcOut<ReadHalf<BoxDuplex<TcpStream>>, Wri
     let do_stuff = TcpStream::connect(&addr)
             .and_then(move |tcp| {
                 OwningClient::new(tcp,
-                                  &MAINNET_IDENTIFIER,
-                                  &pk,
-                                  &sk,
-                                  &ephemeral_pk,
-                                  &ephemeral_sk,
-                                  &pk)
+                                  MAINNET_IDENTIFIER,
+                                  pk,
+                                  sk,
+                                  ephemeral_pk,
+                                  ephemeral_sk,
+                                  pk)
                         .map_err(|(err, _)| err)
             })
             .map_err(|err| {
