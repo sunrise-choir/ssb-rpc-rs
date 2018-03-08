@@ -14,9 +14,11 @@ impl Whoami {
     }
 }
 
+const WHOAMI: [&'static str; 1] = ["whoami"];
+
 impl Rpc for Whoami {
-    fn names() -> Box<[&'static str]> {
-        Box::new(["whoami"])
+    fn names() -> &'static [&'static str] {
+        &WHOAMI
     }
 }
 
