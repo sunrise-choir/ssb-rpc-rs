@@ -68,6 +68,21 @@ pub fn test_sync<RPC: 'static + Rpc,
     });
 }
 
+// Sends an async rpc and checks that a non-error response is received.
+pub fn test_async<RPC: 'static + Rpc,
+                  Response: 'static + DeserializeOwned,
+                  Err: 'static + DeserializeOwned + Debug>
+    (req: RPC) {
+    run_test(move |mut rpc_out| {
+        let (send_request, response) = rpc_out.async::<RPC, Response, Err>(&req);
+
+        current_thread::spawn(send_request.map_err(|err| panic!("Failed to send async request:\n\n{:?}", err)));
+        current_thread::spawn(response
+                                  .map(|_| ())
+                                  .map_err(|err| panic!("Got error receiving: {:?}", err)));
+    });
+}
+
 // Sends a source rpc and checks that the source does not error.
 pub fn test_source<RPC: 'static + Rpc,
                    Response: 'static + DeserializeOwned,
@@ -78,13 +93,47 @@ pub fn test_source<RPC: 'static + Rpc,
 
         current_thread::spawn(send_request.map_err(|err| panic!("Failed to send source request:\n\n{:?}", err)));
         current_thread::spawn(responses
-                                  .for_each(|res| ok(()))
+                                  .for_each(|_| ok(()))
                                   .map(|_| ())
                                   .map_err(|err| panic!("Got error receiving: {:?}", err)));
     });
 }
 
+
+// Sends a sync rpc and logs the response.
+#[allow(dead_code)]
+pub fn log_sync<RPC: 'static + Rpc,
+                Response: 'static + DeserializeOwned + Debug,
+                Err: 'static + DeserializeOwned + Debug>
+    (req: RPC) {
+    run_test(move |mut rpc_out| {
+        let (send_request, response) = rpc_out.sync::<RPC, Response, Err>(&req);
+
+        current_thread::spawn(send_request.map_err(|err| panic!("Failed to send sync request:\n\n{:?}", err)));
+        current_thread::spawn(response
+                                  .map(|res| println!("{:?}", res))
+                                  .map_err(|err| panic!("Got error receiving: {:?}", err)));
+    });
+}
+
+// Sends an async rpc and logs the response.
+#[allow(dead_code)]
+pub fn log_async<RPC: 'static + Rpc,
+                 Response: 'static + DeserializeOwned + Debug,
+                 Err: 'static + DeserializeOwned + Debug>
+    (req: RPC) {
+    run_test(move |mut rpc_out| {
+        let (send_request, response) = rpc_out.async::<RPC, Response, Err>(&req);
+
+        current_thread::spawn(send_request.map_err(|err| panic!("Failed to send async request:\n\n{:?}", err)));
+        current_thread::spawn(response
+                                  .map(|res| println!("{:?}", res))
+                                  .map_err(|err| panic!("Got error receiving: {:?}", err)));
+    });
+}
+
 // Sends a source rpc and logs all responses and errors.
+#[allow(dead_code)]
 pub fn log_source<RPC: 'static + Rpc,
                   Response: 'static + DeserializeOwned + Debug,
                   Err: 'static + DeserializeOwned + Debug>
