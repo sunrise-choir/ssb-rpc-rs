@@ -4,6 +4,7 @@ use std::net::{SocketAddr, Ipv6Addr};
 
 use box_stream::BoxDuplex;
 use futures::prelude::*;
+use futures::future::ok;
 use muxrpc::{muxrpc, RpcOut, Rpc};
 use secret_stream::OwningClient;
 use serde::de::DeserializeOwned;
@@ -62,6 +63,38 @@ pub fn test_sync<RPC: 'static + Rpc,
 
         current_thread::spawn(send_request.map_err(|err| panic!("Failed to send sync request:\n\n{:?}", err)));
         current_thread::spawn(response
+                                  .map(|_| ())
+                                  .map_err(|err| panic!("Got error receiving: {:?}", err)));
+    });
+}
+
+// Sends a source rpc and checks that the source does not error.
+pub fn test_source<RPC: 'static + Rpc,
+                   Response: 'static + DeserializeOwned,
+                   Err: 'static + DeserializeOwned + Debug>
+    (req: RPC) {
+    run_test(move |mut rpc_out| {
+        let (send_request, responses) = rpc_out.source::<RPC, Response, Err>(&req);
+
+        current_thread::spawn(send_request.map_err(|err| panic!("Failed to send source request:\n\n{:?}", err)));
+        current_thread::spawn(responses
+                                  .for_each(|res| ok(()))
+                                  .map(|_| ())
+                                  .map_err(|err| panic!("Got error receiving: {:?}", err)));
+    });
+}
+
+// Sends a source rpc and logs all responses and errors.
+pub fn log_source<RPC: 'static + Rpc,
+                  Response: 'static + DeserializeOwned + Debug,
+                  Err: 'static + DeserializeOwned + Debug>
+    (req: RPC) {
+    run_test(move |mut rpc_out| {
+        let (send_request, responses) = rpc_out.source::<RPC, Response, Err>(&req);
+
+        current_thread::spawn(send_request.map_err(|err| panic!("Failed to send source request:\n\n{:?}", err)));
+        current_thread::spawn(responses
+                                  .for_each(|res| ok(println!("{:?}", res)))
                                   .map(|_| ())
                                   .map_err(|err| panic!("Got error receiving: {:?}", err)));
     });

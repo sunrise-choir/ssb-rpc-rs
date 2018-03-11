@@ -12,7 +12,7 @@ default = ["ssb"]
 ssb = [] # Core rpcs from https://github.com/ssbc/scuttlebot/blob/master/api.md
 
 [dependencies]
-ssb-common = "0.2.4"
+ssb-common = { git = "https://github.com/ssbc/ssb-common-rs" }
 muxrpc = "0.2.0"
 serde = "1.0.27"
 serde_derive = "1.0.27"
