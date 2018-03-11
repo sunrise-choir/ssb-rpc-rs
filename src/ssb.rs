@@ -30,15 +30,14 @@ pub struct WhoamiResponse {
 }
 
 impl WhoamiResponse {
-    /// The `FeedId` of the current user.
-    pub fn feed_id(&self) -> &FeedId {
-        &self.id
+    /// Get the `FeedId` of the current user.
+    pub fn feed_id(&self) -> FeedId {
+        self.id
     }
 
-    // TODO doesn't need to be into
-    /// Consume the `WhoamiResponse` and return the user's `FeedId`.
-    pub fn into_feed_id(self) -> FeedId {
-        self.id
+    /// Get a reference to the `FeedId` of the current user.
+    pub fn feed_id_ref(&self) -> &FeedId {
+        &self.id
     }
 }
 
@@ -111,6 +110,6 @@ mod tests {
     #[test]
     fn latest() {
         let req = Latest::new();
-        log_source::<Latest, LatestItem, Value>(req); // TODO test
+        test_source::<Latest, LatestItem, Value>(req);
     }
 }
