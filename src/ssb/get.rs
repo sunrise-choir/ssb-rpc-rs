@@ -41,14 +41,16 @@ impl<'id> Rpc for GetRef<'id> {
 mod tests {
     use serde_json::Value;
 
-    use test_helpers::*;
     use super::*;
+    use test_helpers::*;
 
     #[test]
     fn get() {
-        let req = Get::new("%Igm25FZEje8LeruZ0MnCajFz9e1LoMO3EHB5C0fRMmw=.sha256"
-                               .parse::<MessageId>()
-                               .unwrap());
+        let req = Get::new(
+            "%Igm25FZEje8LeruZ0MnCajFz9e1LoMO3EHB5C0fRMmw=.sha256"
+                .parse::<MessageId>()
+                .unwrap(),
+        );
         test_async::<Get, Value, Value>(req);
     }
 }
