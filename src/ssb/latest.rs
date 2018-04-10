@@ -59,8 +59,8 @@ impl LatestItem {
 mod tests {
     use serde_json::Value;
 
-    use test_helpers::*;
     use super::*;
+    use test_helpers::*;
 
     #[test]
     fn latest() {

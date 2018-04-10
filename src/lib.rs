@@ -11,8 +11,8 @@
 #![feature(ip_constructors)] // tests only
 
 extern crate muxrpc;
-extern crate ssb_common;
 extern crate serde;
+extern crate ssb_common;
 #[macro_use(Serialize, Deserialize)]
 extern crate serde_derive;
 
@@ -21,11 +21,11 @@ extern crate box_stream;
 #[cfg(test)]
 extern crate futures;
 #[cfg(test)]
-extern crate sodiumoxide;
-#[cfg(test)]
 extern crate secret_stream;
 #[cfg(test)]
 extern crate serde_json;
+#[cfg(test)]
+extern crate sodiumoxide;
 #[cfg(test)]
 extern crate ssb_keyfile;
 #[cfg(test)]
