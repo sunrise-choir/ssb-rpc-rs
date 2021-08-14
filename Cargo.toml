@@ -3,9 +3,9 @@ name = "ssb-rpc"
 version = "0.3.1"
 authors = ["AljoschaMeyer <mail@aljoscha-meyer.de>"]
 description = "The remote procedure calls used by ssb."
-repository = "https://github.com/ssbc/ssb-rpc-rs"
+repository = "https://github.com/sunrise-choir/ssb-rpc-rs"
 readme = "README.md"
-license = "AGPL-3.0"
+license = "LGPL-3.0"
 
 [features]
 default = ["ssb"]
